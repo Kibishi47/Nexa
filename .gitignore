@@ -1,0 +1,61 @@
+# === Xcode ===
+.DS_Store
+xcuserdata/
+*.xcuserstate
+*.xcodeproj/project.xcworkspace/
+*.xcodeproj/xcuserdata/
+
+# === Swift Package Manager ===
+.build/
+.swiftpm/
+Package.resolved
+
+# === CocoaPods ===
+Pods/
+Podfile.lock
+
+# === Carthage ===
+Carthage/Build/
+
+# === Derived Data ===
+DerivedData/
+
+# === Archives ===
+*.xcarchive
+
+# === Playgrounds ===
+timeline.xctimeline
+playground.xcworkspace
+
+# === Core Data ===
+*.xccurrentversion
+
+# === Build Artifacts ===
+*.app
+*.ipa
+*.dSYM
+*.bcsymbolmap
+*.xcframework
+
+# === Device Support ===
+DeviceSupport/
+
+# === Provisioning Profiles ===
+*.mobileprovision
+*.provisionprofile
+
+# === Simulator Logs ===
+*.simstate
+
+# === SwiftPM Generated Files ===
+.swift-version
+
+# === IDE Saved State ===
+*.IDEWorkspaceChecks.plist
+
+# === User-Specific Files ===
+*.moved-aside
+*.swp
+*.mode1v3
+*.mode2v3
+*.perspectivev3
