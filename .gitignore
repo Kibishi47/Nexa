@@ -5,6 +5,9 @@ xcuserdata/
 *.xcodeproj/project.xcworkspace/
 *.xcodeproj/xcuserdata/
 
+# === Configuration ===
+*.xcconfig
+
 # === Swift Package Manager ===
 .build/
 .swiftpm/
