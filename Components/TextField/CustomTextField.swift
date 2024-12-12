@@ -12,6 +12,21 @@ struct CustomTextField: View {
     let systemImage: String
     let isSecure: Bool
     @Binding var text: String
+    let autocapitalization: Bool
+    
+    init(
+        placeholder: String,
+        systemImage: String,
+        isSecure: Bool,
+        text: Binding<String>,
+        autocapitalization: Bool = true
+    ) {
+        self.placeholder = placeholder
+        self.systemImage = systemImage
+        self.isSecure = isSecure
+        self._text = text
+        self.autocapitalization = autocapitalization
+    }
     
     var body: some View {
         HStack {
@@ -24,6 +39,7 @@ struct CustomTextField: View {
                     .textContentType(.password)
             } else {
                 TextField(placeholder, text: $text)
+                    .autocapitalization(autocapitalization ? .sentences : .none)
             }
         }
         .foregroundColor(.white)

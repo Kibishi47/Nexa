@@ -9,8 +9,8 @@ import SwiftUI
 
 struct LoginView: View {
     @EnvironmentObject private var navigationManager: NavigationManager
-    @State private var email = ""
-    @State private var password = ""
+    @StateObject private var viewModel = LoginViewModel()
+    
     @State private var isAnimating = false
     
     var body: some View {
@@ -42,7 +42,8 @@ struct LoginView: View {
                         placeholder: "Email",
                         systemImage: "envelope",
                         isSecure: false,
-                        text: $email
+                        text: $viewModel.email,
+                        autocapitalization: false
                     )
                     .opacity(isAnimating ? 1 : 0)
                     .offset(y: isAnimating ? 0 : 20)
@@ -51,17 +52,25 @@ struct LoginView: View {
                         placeholder: "Mot de passe",
                         systemImage: "lock",
                         isSecure: true,
-                        text: $password
+                        text: $viewModel.password
                     )
                     .opacity(isAnimating ? 1 : 0)
                     .offset(y: isAnimating ? 0 : 20)
                 }
                 .padding(.top, 30)
                 
+                // Error message display
+                if !viewModel.loginErrorMessage.isEmpty {
+                    Text(viewModel.loginErrorMessage)
+                        .foregroundColor(.red)
+                        .opacity(isAnimating ? 1 : 0)
+                }
+                
                 // Connection button
-                PrimaryButton(title: "Se connecter") {
-                    // TODO: To implement
-                    navigationManager.navigateToMain()
+                PrimaryButton(title: "Se connecter", isLoading: $viewModel.isLoading) {
+                    Task {
+                        await viewModel.login()
+                    }
                 }
                 .opacity(isAnimating ? 1 : 0)
                 .offset(y: isAnimating ? 0 : 20)

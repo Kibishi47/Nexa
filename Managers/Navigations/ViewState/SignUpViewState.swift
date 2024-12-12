@@ -17,7 +17,7 @@ class SignUpViewState: ViewState {
     }
     
     func navigateBack() {
-        navigationManager.updateView(HomeViewState(navigationManager))
+        navigationManager.navigateToHome()
     }
     
     func navigateToHome() {

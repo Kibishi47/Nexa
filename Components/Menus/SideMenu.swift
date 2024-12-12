@@ -93,8 +93,13 @@ struct SideMenu: View {
         case .history:
             navigationManager.navigateToHistory()
         case .logout:
-            // TODO: Managing disconnection
-            break
+            Task {
+                await AuthService.instance.logout(){ success, error in
+                    if (!success) {
+                        // TODO: Inform user
+                    }
+                }
+            }
         }
     }
 }

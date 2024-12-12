@@ -18,11 +18,11 @@ class ChatViewState: ViewState {
     }
     
     func navigateBack() {
-        navigationManager.updateView(ChatListViewState(navigationManager))
+        navigationManager.navigateToChatList()
     }
     
     func navigateToHome() {
-        return
+        navigationManager.updateView(HomeViewState(navigationManager))
     }
     
     func navigateToLogin() {

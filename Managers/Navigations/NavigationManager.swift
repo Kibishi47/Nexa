@@ -7,10 +7,21 @@
 
 import SwiftUI
 
-class NavigationManager: ObservableObject {
+class NavigationManager: ObservableObject, AuthService.Observer {
     @Published var currentView: AnyView = AnyView(HomeView())
     @Published var currentMenuItem: MenuItem = .main
     private lazy var viewState: ViewState = HomeViewState(self)
+    
+    init() {
+        AuthService.instance.subscribe(self)
+        
+        // Go to the first page depending on connection
+        if (AuthService.instance.isAuthenticated()) {
+            self.viewState.navigateToMain()
+        } else {
+            self.viewState.navigateToHome()
+        }
+    }
     
     func updateView(_ viewState: ViewState) {
         self.viewState = viewState
@@ -21,38 +32,83 @@ class NavigationManager: ObservableObject {
     }
     
     func navigateToHome() {
-        viewState.navigateToHome()
+        if (AuthService.instance.isAuthenticated()) {
+            self.viewState.navigateToMain()
+        } else {
+            self.viewState.navigateToHome()
+        }
     }
     
     func navigateToLogin() {
-        viewState.navigateToLogin()
+        if (AuthService.instance.isAuthenticated()) {
+            self.viewState.navigateToMain()
+        } else {
+            self.viewState.navigateToLogin()
+        }
     }
     
     func navigateToSignUp() {
-        viewState.navigateToSignUp()
+        if (AuthService.instance.isAuthenticated()) {
+            self.viewState.navigateToMain()
+        } else {
+            self.viewState.navigateToSignUp()
+        }
     }
     
     func navigateToMain() {
-        viewState.navigateToMain()
+        if (AuthService.instance.isAuthenticated()) {
+            self.viewState.navigateToMain()
+        } else {
+            self.viewState.navigateToHome()
+        }
     }
     
     func navigateToProfile() {
-        viewState.navigateToProfile()
+        if (AuthService.instance.isAuthenticated()) {
+            self.viewState.navigateToProfile()
+        } else {
+            self.viewState.navigateToHome()
+        }
     }
     
     func navigateToSubscription() {
-        viewState.navigateToSubscription()
+        if (AuthService.instance.isAuthenticated()) {
+            self.viewState.navigateToSubscription()
+        } else {
+            self.viewState.navigateToHome()
+        }
     }
     
     func navigateToHistory() {
-        viewState.navigateToHistory()
+        if (AuthService.instance.isAuthenticated()) {
+            self.viewState.navigateToHistory()
+        } else {
+            self.viewState.navigateToHome()
+        }
     }
     
     func navigateToChatList() {
-        viewState.navigateToChatList()
+        if (AuthService.instance.isAuthenticated()) {
+            self.viewState.navigateToChatList()
+        } else {
+            self.viewState.navigateToHome()
+        }
     }
     
     func navigateToChat(id: UUID?) {
-        viewState.navigateToChat(id: id)
+        if (AuthService.instance.isAuthenticated()) {
+            self.viewState.navigateToChat(id: id)
+        } else {
+            self.viewState.navigateToHome()
+        }
+    }
+    
+    func onAuthStateChange(_ state: AuthService.AuthState) {
+        switch state {
+        case .loggedIn:
+            navigateToMain()
+        case .loggedOut:
+            navigateToHome()
+        }
     }
 }

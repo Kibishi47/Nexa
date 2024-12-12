@@ -18,11 +18,11 @@ class HistoryViewState: ViewState {
     }
     
     func navigateBack() {
-        navigationManager.updateView(MainViewState(navigationManager))
+        navigationManager.navigateToMain()
     }
     
     func navigateToHome() {
-        return
+        navigationManager.updateView(HomeViewState(navigationManager))
     }
     
     func navigateToLogin() {
