@@ -9,158 +9,213 @@ import SwiftUI
 
 struct ProfileView: View {
     @EnvironmentObject private var navigationManager: NavigationManager
-    @State private var fullName = "John Doe"
-    @State private var email = "john.doe@example.com"
-    @State private var isEditingName = false
-    @State private var isEditingEmail = false
+    @StateObject private var viewModel = ProfileViewModel()
     
     var body: some View {
-        ScrollView {
+        ZStack {
             VStack(spacing: 24) {
                 // Header
                 NavigateBackHeader(title: "Profil")
-                .padding(.horizontal)
-                .padding(.bottom)
+                    .padding(.horizontal)
+                    .padding(.bottom)
                 
-                // Profile Picture Section
-                VStack(spacing: 16) {
-                    Image(systemName: "person.circle.fill")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 100, height: 100)
-                        .foregroundColor(.blue)
+                if viewModel.isLoading {
+                    Spacer()
+                    ProgressView()
+                        .scaleEffect(1.5)
+                        .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                    Spacer()
+                } else {
+                    VStack(spacing: 16) {
+                        // Profile Picture Section
+                        Button(action: {
+                            viewModel.isShowingImagePicker = true
+                        }) {
+                            ZStack {
+                                ZStack {
+                                    if let avatarUrl = viewModel.profile?.avatarUrl, let url = URL(string: avatarUrl) {
+                                        AsyncImage(url: url) { image in
+                                            image
+                                                .resizable()
+                                                .aspectRatio(contentMode: .fill)
+                                        } placeholder: {
+                                            ProgressView()
+                                        }
+                                        .frame(width: 100, height: 100)
+                                        .clipShape(Circle())
+                                    } else {
+                                        Image(systemName: "person.circle.fill")
+                                            .resizable()
+                                            .aspectRatio(contentMode: .fit)
+                                            .frame(width: 100, height: 100)
+                                            .foregroundColor(.blue)
+                                    }
+                                }
+                                .overlay(
+                                    Circle()
+                                        .stroke(
+                                            LinearGradient(
+                                                gradient: Gradient(colors: [.blue, .purple]),
+                                                startPoint: .topLeading,
+                                                endPoint: .bottomTrailing
+                                            ),
+                                            lineWidth: 2
+                                        )
+                                        .frame(width: 110, height: 110)
+                                )
+                                
+                                Image(systemName: "pencil.circle.fill")
+                                    .foregroundColor(.white)
+                                    .background(Color.blue)
+                                    .clipShape(Circle())
+                                    .offset(x: 40, y: 40)
+                            }
+                        }
                         .background(
                             Circle()
                                 .fill(Color.white.opacity(0.1))
                                 .frame(width: 110, height: 110)
                         )
-                        .overlay(
-                            Circle()
-                                .stroke(
-                                    LinearGradient(
-                                        gradient: Gradient(colors: [.blue, .purple]),
-                                        startPoint: .topLeading,
-                                        endPoint: .bottomTrailing
-                                    ),
-                                    lineWidth: 2
-                                )
-                                .frame(width: 110, height: 110)
-                        )
-                }
-                .padding(.bottom, 8)
-                
-                // Info Section
-                VStack(spacing: 16) {
-                    // Name Field
-                    VStack(alignment: .leading, spacing: 12) {
-                        Text("Nom complet")
-                            .font(.subheadline)
-                            .foregroundColor(.gray)
-                            .padding(.horizontal, 4)
-                        
-                        HStack {
-                            if isEditingName {
-                                CustomTextField(
-                                    placeholder: "Nom complet",
-                                    systemImage: "person",
-                                    isSecure: false,
-                                    text: $fullName
-                                )
-                            } else {
-                                Text(fullName)
-                                    .font(.body)
-                                    .foregroundColor(.white)
-                                    .padding(.vertical, 12)
-                                    .padding(.horizontal, 4)
+                    }
+                    .padding(.bottom, 8)
+                    
+                    // Info section
+                    VStack {
+                        // Profile data Section
+                        VStack(spacing: 8) {
+                            // Email Field
+                            EditableTextField(
+                                placeholder: "Email",
+                                systemImage: "envelope",
+                                text: Binding(
+                                    get: {
+                                        viewModel.user?.email ?? ""
+                                    }, set: { newValue in
+                                        viewModel.user?.email = newValue
+                                    }),
+                                isEditing: $viewModel.isEmailEditing
+                            ) {
+                                Task {
+                                    await viewModel.updateEmail()
+                                }
                             }
                             
-                            Spacer()
+                            // Username Field
+                            EditableTextField(
+                                placeholder: "Nom d'utilisateur",
+                                systemImage: "person",
+                                text: Binding(
+                                    get: {
+                                        viewModel.profile?.username ?? ""
+                                    }, set: { newValue in
+                                        viewModel.profile?.username = newValue
+                                    }),
+                                isEditing: $viewModel.isUsernameEditing
+                            ) {
+                                Task {
+                                    await viewModel.updateUsername()
+                                }
+                            }
+                        }
+                        .padding(.top, 8)
+                        .padding(.horizontal)
+                        
+                        Spacer()
+                        
+                        // Actions Section
+                        VStack(spacing: 16) {
+                            SecondaryButton(title: "Modifier les identifiants") {
+                                viewModel.isShowingChangePassowrd = true
+                            }
                             
-                            Button(action: { isEditingName.toggle() }) {
-                                Text(isEditingName ? "Enregistrer" : "Modifier")
-                                    .font(.subheadline)
-                                    .foregroundColor(.blue)
+                            AlertButton(
+                                title: "Déconnexion",
+                                isLoading: $viewModel.isLogoutLoading
+                            ) {
+                                Task {
+                                    await viewModel.logout()
+                                }
                             }
                         }
                         .padding(.horizontal)
-                        .background(Color.white.opacity(0.05))
-                        .cornerRadius(12)
-                    }
-                    
-                    // Email Field
-                    VStack(alignment: .leading, spacing: 12) {
-                        Text("Email")
-                            .font(.subheadline)
-                            .foregroundColor(.gray)
-                            .padding(.horizontal, 4)
-                        
-                        HStack {
-                            if isEditingEmail {
-                                CustomTextField(
-                                    placeholder: "Email",
-                                    systemImage: "envelope",
-                                    isSecure: false,
-                                    text: $email
-                                )
-                            } else {
-                                Text(email)
-                                    .font(.body)
-                                    .foregroundColor(.white)
-                                    .padding(.vertical, 12)
-                                    .padding(.horizontal, 4)
-                            }
-                            
-                            Spacer()
-                            
-                            Button(action: { isEditingEmail.toggle() }) {
-                                Text(isEditingEmail ? "Enregistrer" : "Modifier")
-                                    .font(.subheadline)
-                                    .foregroundColor(.blue)
-                            }
-                        }
-                        .padding(.horizontal)
-                        .background(Color.white.opacity(0.05))
-                        .cornerRadius(12)
                     }
                 }
-                .padding(.horizontal)
-                
-                // Actions Section
-                VStack(spacing: 16) {
-                    // Change Password Button
-                    PrimaryButton(title: "Changer le mot de passe") {
-                        // Action to change password
-                    }
-                    
-                    // Logout Button
-                    Button(action: {
-                        // Action to logout
-                    }) {
-                        Text("Déconnexion")
-                            .font(.system(size: 17, weight: .semibold, design: .rounded))
-                            .foregroundColor(.red)
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 14)
-                            .background(
-                                RoundedRectangle(cornerRadius: 12)
-                                    .fill(Color.white.opacity(0.05))
-                            )
-                    }
-                }
-                .padding(.horizontal)
-                .padding(.top, 8)
             }
             .padding(.vertical)
-        }
-        .background(
-            LinearGradient(
-                gradient: Gradient(colors: [Color.black, Color(red: 0.1, green: 0.1, blue: 0.2)]),
-                startPoint: .top,
-                endPoint: .bottom
+            .background(
+                LinearGradient(
+                    gradient: Gradient(colors: [Color.black, Color(red: 0.1, green: 0.1, blue: 0.2)]),
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+                .edgesIgnoringSafeArea(.all)
             )
-            .edgesIgnoringSafeArea(.all)
-        )
-        .navigationBarHidden(true)
+            .navigationBarHidden(true)
+            .fullScreenCover(isPresented: $viewModel.isShowingChangePassowrd) {
+                ChangePasswordView(viewModel: viewModel)
+            }
+            .sheet(isPresented: $viewModel.isShowingImagePicker, onDismiss: loadImage) {
+                // ImagePicker(image: $inputImage)
+            }
+            .alert(isPresented: $viewModel.hasError) {
+                Alert(
+                    title: Text("Erreur"),
+                    message: Text(viewModel.errorMessage),
+                    dismissButton: .default(Text("OK"))
+                )
+            }
+            
+            if viewModel.isUpdating {
+                Color.black.opacity(0.5)
+                    .edgesIgnoringSafeArea(.all)
+                ProgressView()
+                    .scaleEffect(1.5)
+                    .progressViewStyle(CircularProgressViewStyle(tint: .white))
+            }
+        }
+        .onAppear {
+            Task {
+                await viewModel.fetchData()
+            }
+        }
+    }
+    
+    func loadImage() {
+        // Implementation for loading image
+    }
+}
+
+
+
+struct ImagePicker: UIViewControllerRepresentable {
+    @Binding var image: UIImage?
+    
+    func makeUIViewController(context: Context) -> UIImagePickerController {
+        let picker = UIImagePickerController()
+        picker.delegate = context.coordinator
+        return picker
+    }
+    
+    func updateUIViewController(_ uiViewController: UIImagePickerController, context: Context) {}
+    
+    func makeCoordinator() -> Coordinator {
+        Coordinator(self)
+    }
+    
+    class Coordinator: NSObject, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+        let parent: ImagePicker
+        
+        init(_ parent: ImagePicker) {
+            self.parent = parent
+        }
+        
+        func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+            if let uiImage = info[.originalImage] as? UIImage {
+                parent.image = uiImage
+            }
+            
+            picker.dismiss(animated: true)
+        }
     }
 }
 

@@ -13,33 +13,44 @@ struct CustomTextField: View {
     let isSecure: Bool
     @Binding var text: String
     let autocapitalization: Bool
-    
+    @Binding var disabled: Bool
+
     init(
         placeholder: String,
         systemImage: String,
         isSecure: Bool,
         text: Binding<String>,
-        autocapitalization: Bool = true
+        autocapitalization: Bool = true,
+        disabled: Binding<Bool> = .constant(false),
+        enabled: Binding<Bool> = .constant(true)
     ) {
         self.placeholder = placeholder
         self.systemImage = systemImage
         self.isSecure = isSecure
         self._text = text
         self.autocapitalization = autocapitalization
+        self._disabled = Binding(
+            get: { !enabled.wrappedValue || disabled.wrappedValue },
+            set: { newValue in
+                disabled.wrappedValue = newValue
+                enabled.wrappedValue = !newValue
+            })
     }
-    
+
     var body: some View {
         HStack {
             Image(systemName: systemImage)
                 .foregroundColor(.white.opacity(0.7))
                 .frame(width: 20)
-            
+
             if isSecure {
                 SecureField(placeholder, text: $text)
                     .textContentType(.password)
+                    .disabled(disabled)
             } else {
                 TextField(placeholder, text: $text)
                     .autocapitalization(autocapitalization ? .sentences : .none)
+                    .disabled(disabled)
             }
         }
         .foregroundColor(.white)
@@ -56,10 +67,13 @@ struct CustomTextField: View {
 }
 
 #Preview {
-    CustomTextField(
-        placeholder: "Username",
-        systemImage: "person",
-        isSecure: false,
-        text: .constant("")
-    )
+    ZStack {
+        Color.black.edgesIgnoringSafeArea(.all)
+        CustomTextField(
+            placeholder: "Username",
+            systemImage: "person",
+            isSecure: false,
+            text: .constant("")
+        )
+    }
 }

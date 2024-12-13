@@ -72,6 +72,10 @@ struct PrimaryButton: View {
 #Preview {
     ZStack {
         Color.black.edgesIgnoringSafeArea(.all)
-        PrimaryButton(title: "Aperçu", isLoading: .constant(true), action: {})
+        VStack(spacing: 20) {
+            PrimaryButton(title: "Aperçu") {}
+            PrimaryButton(title: "Aperçu", isLoading: .constant(true)) {}
+        }
+        .padding()
     }
 }

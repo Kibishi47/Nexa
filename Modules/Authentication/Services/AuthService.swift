@@ -111,4 +111,23 @@ class AuthService {
             print("error refresh session: \(error)")
         }
     }
+    
+    func getUser() async -> Supabase.User? {
+        do {
+            let user = try await supabaseClient.auth.user()
+            return user
+        } catch {
+            print("error get user: \(error)")
+            return nil
+        }
+    }
+    
+    func updateUserEmail(user: Supabase.User) async {
+        do {
+            try await supabaseClient.auth.update(user: UserAttributes(email: user.email))
+        } catch {
+            print("error update user email")
+            
+        }
+    }
 }

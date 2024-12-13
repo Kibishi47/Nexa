@@ -37,7 +37,7 @@ struct SignUpView: View {
                 // Form fields
                 VStack(spacing: 20) {
                     CustomTextField(
-                        placeholder: "Nom complet",
+                        placeholder: "Nom d'utilisateur",
                         systemImage: "person",
                         isSecure: false,
                         text: $viewModel.username
