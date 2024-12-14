@@ -19,6 +19,8 @@ struct MainView: View {
     
     let recentHistory: [HistoryItem] = Array(HistoryRepository().getHistoryItems().prefix(3))
     
+    let username: String = DataManager.getInstance().profile?.username ?? "TEST"
+    
     var body: some View {
         ZStack {
             // Main content

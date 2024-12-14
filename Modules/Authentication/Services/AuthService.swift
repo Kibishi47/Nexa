@@ -10,7 +10,7 @@ import Supabase
 
 class AuthService {
     
-    static let instance = AuthService()
+    private static var instance: AuthService? = nil
     
     protocol Observer {
         func onAuthStateChange(_ state: AuthState) -> Void
@@ -22,6 +22,7 @@ class AuthService {
     }
     
     var observers: [Observer] = []
+    var allowNotify = true
     
     private init() {
         Task {
@@ -29,20 +30,31 @@ class AuthService {
         }
     }
     
+    static func getInstance() -> AuthService {
+        if instance == nil {
+            instance = AuthService()
+        }
+        return instance!
+    }
+    
     private func configureAuthStateListener() async {
         for await (event, _) in supabaseClient.auth.authStateChanges {
-            print("auth state change: \(event.rawValue)")
-            switch event {
-            case .initialSession:
-                await refreshSession()
-            case .signedIn:
-                notifyObservers(state: .loggedIn)
-            case .signedOut:
-                notifyObservers(state: .loggedOut)
-            case .userDeleted:
-                notifyObservers(state: .loggedOut)
-            default:
-                break
+            if allowNotify {
+                print("auth state change: \(event.rawValue)")
+                switch event {
+                case .initialSession:
+                    await refreshSession()
+                case .signedIn:
+                    notifyObservers(state: .loggedIn)
+                case .signedOut:
+                    notifyObservers(state: .loggedOut)
+                case .userDeleted:
+                    notifyObservers(state: .loggedOut)
+                default:
+                    break
+                }
+            } else {
+                allowNotify = true
             }
         }
     }
@@ -72,7 +84,8 @@ class AuthService {
         }
     }
     
-    func login(email: String, password: String, completion: @escaping (_ isSucceed: Bool, _ error: Supabase.AuthError?) -> Void) async {
+    func login(email: String, password: String, blockingNotify: Bool = false, completion: @escaping (_ isSucceed: Bool, _ error: Supabase.AuthError?) -> Void) async {
+        allowNotify = !blockingNotify
         do {
             try await supabaseClient.auth.signIn(email: email, password: password)
             completion(true, nil)
@@ -112,22 +125,38 @@ class AuthService {
         }
     }
     
-    func getUser() async -> Supabase.User? {
+    func fetchUser() async -> Supabase.User? {
         do {
-            let user = try await supabaseClient.auth.user()
-            return user
+            return try await supabaseClient.auth.user()
         } catch {
             print("error get user: \(error)")
             return nil
         }
     }
     
-    func updateUserEmail(user: Supabase.User) async {
+    func updateUserEmail(user: Supabase.User, completion: @escaping (_ isSucceed: Bool, _ error: Supabase.AuthError?) -> Void) async {
         do {
-            try await supabaseClient.auth.update(user: UserAttributes(email: user.email))
+            let _ = try await supabaseClient.auth.update(user: UserAttributes(email: user.email))
+            completion(true, nil)
+        } catch let authError as Supabase.AuthError {
+            print("error updating user email: \(authError)")
+            completion(false, authError)
         } catch {
-            print("error update user email")
-            
+            print("error updating user email: \(error)")
+            completion(false, nil)
+        }
+    }
+    
+    func updateUserPassword(password: String, completion: @escaping (_ isSucceed: Bool, _ error: Supabase.AuthError?) -> Void) async {
+        do {
+            let _ = try await supabaseClient.auth.update(user: UserAttributes(password: password))
+            completion(true, nil)
+        } catch let authError as Supabase.AuthError {
+            print("error updating user password: \(authError)")
+            completion(false, authError)
+        } catch {
+            print("error updating user password: \(error)")
+            completion(false, nil)
         }
     }
 }

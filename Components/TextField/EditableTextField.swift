@@ -16,14 +16,6 @@ struct EditableTextField: View {
     
     @FocusState private var isFocused: Bool
     
-    init(placeholder: String, systemImage: String, text: Binding<String>, isEditing: Binding<Bool>, onSubmit: @escaping () -> Void) {
-        self.placeholder = placeholder
-        self.systemImage = systemImage
-        self._text = text
-        self._isEditing = isEditing
-        self.onSubmit = onSubmit
-    }
-    
     var body: some View {
         ZStack {
             CustomTextField(
@@ -38,6 +30,11 @@ struct EditableTextField: View {
             .onChange(of: isEditing) { newValue in
                 if newValue {
                     isFocused = true
+                }
+            }
+            .onChange(of: isFocused) { newValue in
+                if !newValue {
+                    isEditing = false
                 }
             }
             
@@ -59,6 +56,7 @@ struct EditableTextField: View {
         }
     }
 }
+
 
 #Preview {
     ZStack {

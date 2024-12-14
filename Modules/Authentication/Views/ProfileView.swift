@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ProfileView: View {
     @EnvironmentObject private var navigationManager: NavigationManager
+    @EnvironmentObject private var alertManager: AlertManager
     @StateObject private var viewModel = ProfileViewModel()
     
     var body: some View {
@@ -125,7 +126,7 @@ struct ProfileView: View {
                         // Actions Section
                         VStack(spacing: 16) {
                             SecondaryButton(title: "Modifier les identifiants") {
-                                viewModel.isShowingChangePassowrd = true
+                                viewModel.isShowingChangePassword = true
                             }
                             
                             AlertButton(
@@ -151,18 +152,11 @@ struct ProfileView: View {
                 .edgesIgnoringSafeArea(.all)
             )
             .navigationBarHidden(true)
-            .fullScreenCover(isPresented: $viewModel.isShowingChangePassowrd) {
+            .fullScreenCover(isPresented: $viewModel.isShowingChangePassword) {
                 ChangePasswordView(viewModel: viewModel)
             }
             .sheet(isPresented: $viewModel.isShowingImagePicker, onDismiss: loadImage) {
-                // ImagePicker(image: $inputImage)
-            }
-            .alert(isPresented: $viewModel.hasError) {
-                Alert(
-                    title: Text("Erreur"),
-                    message: Text(viewModel.errorMessage),
-                    dismissButton: .default(Text("OK"))
-                )
+                //ImagePicker(image: $inputImage)
             }
             
             if viewModel.isUpdating {
@@ -174,6 +168,7 @@ struct ProfileView: View {
             }
         }
         .onAppear {
+            viewModel.setup(alertManager)
             Task {
                 await viewModel.fetchData()
             }
@@ -222,5 +217,6 @@ struct ImagePicker: UIViewControllerRepresentable {
 #Preview {
     ProfileView()
         .environmentObject(NavigationManager())
+        .environmentObject(AlertManager())
 }
 

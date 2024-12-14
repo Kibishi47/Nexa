@@ -94,7 +94,7 @@ struct SideMenu: View {
             navigationManager.navigateToHistory()
         case .logout:
             Task {
-                await AuthService.instance.logout(){ success, error in
+                await AuthService.getInstance().logout(){ success, error in
                     if (!success) {
                         // TODO: Inform user
                     }

@@ -12,11 +12,15 @@ class NavigationManager: ObservableObject, AuthService.Observer {
     @Published var currentMenuItem: MenuItem = .main
     private lazy var viewState: ViewState = HomeViewState(self)
     
+    private let authService = AuthService.getInstance()
+    
     init() {
-        AuthService.instance.subscribe(self)
-        
-        // Go to the first page depending on connection
-        if (AuthService.instance.isAuthenticated()) {
+        authService.subscribe(self)
+        initiateView()
+    }
+    
+    private func initiateView() {
+        if (authService.isAuthenticated()) {
             self.viewState.navigateToMain()
         } else {
             self.viewState.navigateToHome()
@@ -32,7 +36,7 @@ class NavigationManager: ObservableObject, AuthService.Observer {
     }
     
     func navigateToHome() {
-        if (AuthService.instance.isAuthenticated()) {
+        if (authService.isAuthenticated()) {
             self.viewState.navigateToMain()
         } else {
             self.viewState.navigateToHome()
@@ -40,7 +44,7 @@ class NavigationManager: ObservableObject, AuthService.Observer {
     }
     
     func navigateToLogin() {
-        if (AuthService.instance.isAuthenticated()) {
+        if (authService.isAuthenticated()) {
             self.viewState.navigateToMain()
         } else {
             self.viewState.navigateToLogin()
@@ -48,7 +52,7 @@ class NavigationManager: ObservableObject, AuthService.Observer {
     }
     
     func navigateToSignUp() {
-        if (AuthService.instance.isAuthenticated()) {
+        if (authService.isAuthenticated()) {
             self.viewState.navigateToMain()
         } else {
             self.viewState.navigateToSignUp()
@@ -56,7 +60,7 @@ class NavigationManager: ObservableObject, AuthService.Observer {
     }
     
     func navigateToMain() {
-        if (AuthService.instance.isAuthenticated()) {
+        if (authService.isAuthenticated()) {
             self.viewState.navigateToMain()
         } else {
             self.viewState.navigateToHome()
@@ -64,7 +68,7 @@ class NavigationManager: ObservableObject, AuthService.Observer {
     }
     
     func navigateToProfile() {
-        if (AuthService.instance.isAuthenticated()) {
+        if (authService.isAuthenticated()) {
             self.viewState.navigateToProfile()
         } else {
             self.viewState.navigateToHome()
@@ -72,7 +76,7 @@ class NavigationManager: ObservableObject, AuthService.Observer {
     }
     
     func navigateToSubscription() {
-        if (AuthService.instance.isAuthenticated()) {
+        if (authService.isAuthenticated()) {
             self.viewState.navigateToSubscription()
         } else {
             self.viewState.navigateToHome()
@@ -80,7 +84,7 @@ class NavigationManager: ObservableObject, AuthService.Observer {
     }
     
     func navigateToHistory() {
-        if (AuthService.instance.isAuthenticated()) {
+        if (authService.isAuthenticated()) {
             self.viewState.navigateToHistory()
         } else {
             self.viewState.navigateToHome()
@@ -88,7 +92,7 @@ class NavigationManager: ObservableObject, AuthService.Observer {
     }
     
     func navigateToChatList() {
-        if (AuthService.instance.isAuthenticated()) {
+        if (authService.isAuthenticated()) {
             self.viewState.navigateToChatList()
         } else {
             self.viewState.navigateToHome()
@@ -96,7 +100,7 @@ class NavigationManager: ObservableObject, AuthService.Observer {
     }
     
     func navigateToChat(id: UUID?) {
-        if (AuthService.instance.isAuthenticated()) {
+        if (authService.isAuthenticated()) {
             self.viewState.navigateToChat(id: id)
         } else {
             self.viewState.navigateToHome()

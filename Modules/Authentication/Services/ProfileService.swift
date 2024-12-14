@@ -10,15 +10,22 @@ import Supabase
 
 class ProfileService {
     
-    static let instance = ProfileService()
+    private static var instance: ProfileService? = nil
     
     private init() {}
     
-    func getProfileByUserId(_ userId: UUID) async -> Profile? {
+    static func getInstance() -> ProfileService {
+        if instance == nil {
+            instance = ProfileService()
+        }
+        return instance!
+    }
+    
+    func fetchProfileByUserId(_ userId: UUID) async -> Profile? {
         do {
             let profile: Profile = try await supabaseClient
                 .from("profiles")
-                .select("id, user_id, username, avatar_url")
+                .select()
                 .eq("user_id", value: userId)
                 .single()
                 .execute()
@@ -27,6 +34,23 @@ class ProfileService {
         } catch {
             print("error getting profile: \(error)")
             return nil
+        }
+    }
+    
+    func updateUsernameProfile(_ profile: Profile, completion: @escaping (_ success: Bool, _ error: Supabase.PostgrestError?) -> Void) async {
+        do {
+            try await supabaseClient
+                .from("profiles")
+                .update(["username": profile.username])
+                .eq("id", value: profile.id)
+                .execute()
+            completion(true, nil)
+        } catch let supabaseError as Supabase.PostgrestError {
+            print("error updating username profile: \(supabaseError)")
+            completion(false, supabaseError)
+        } catch {
+            print("error updating username profile: \(error)")
+            completion(false, nil)
         }
     }
 }

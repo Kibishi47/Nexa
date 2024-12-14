@@ -16,7 +16,7 @@ class SignUpViewModel: ObservableObject {
     @Published var isLoading: Bool = false
     @Published var registerErrorMessage: String = ""
     
-    let authService: AuthService = AuthService.instance
+    let authService: AuthService = AuthService.getInstance()
     
     func register() async {
         self.setIsLoading(true)

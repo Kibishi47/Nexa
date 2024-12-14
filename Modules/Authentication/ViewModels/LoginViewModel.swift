@@ -14,7 +14,7 @@ class LoginViewModel: ObservableObject {
     @Published var isLoading: Bool = false
     @Published var loginErrorMessage: String = ""
     
-    let authService: AuthService = AuthService.instance
+    let authService: AuthService = AuthService.getInstance()
     
     func login() async {
         self.setIsLoading(true)
