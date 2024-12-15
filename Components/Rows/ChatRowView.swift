@@ -29,19 +29,13 @@ struct ChatRowView: View {
             
             Spacer()
             
-            Text(formatDate(chat.date))
+            Text(chat.date.toFormat("HH:mm"))
                 .font(.caption)
                 .foregroundColor(.gray)
         }
         .padding()
         .background(Color.white.opacity(0.05))
         .cornerRadius(12)
-    }
-    
-    private func formatDate(_ date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "HH:mm"
-        return formatter.string(from: date)
     }
 }
 

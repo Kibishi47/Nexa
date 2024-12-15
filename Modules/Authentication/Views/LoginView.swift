@@ -29,7 +29,7 @@ struct LoginView: View {
                         .opacity(isAnimating ? 1 : 0)
                         .offset(y: isAnimating ? 0 : 20)
                     
-                    Text("Connexion")
+                    Text("connection_title".translate(moduleName: "Authentication"))
                         .font(.system(size: 32, weight: .bold, design: .rounded))
                         .foregroundColor(.white)
                         .opacity(isAnimating ? 1 : 0)
@@ -39,7 +39,7 @@ struct LoginView: View {
                 // Form fields
                 VStack(spacing: 20) {
                     CustomTextField(
-                        placeholder: "Email",
+                        placeholder: "email_field".translate(moduleName: "Authentication"),
                         systemImage: "envelope",
                         isSecure: false,
                         text: $viewModel.email,
@@ -49,7 +49,7 @@ struct LoginView: View {
                     .offset(y: isAnimating ? 0 : 20)
                     
                     CustomTextField(
-                        placeholder: "Mot de passe",
+                        placeholder: "password_field".translate(moduleName: "Authentication"),
                         systemImage: "lock",
                         isSecure: true,
                         text: $viewModel.password
@@ -67,7 +67,7 @@ struct LoginView: View {
                 }
                 
                 // Connection button
-                PrimaryButton(title: "Se connecter", isLoading: $viewModel.isLoading) {
+                PrimaryButton(title: "connect_action".translate(moduleName: "Authentication"), isLoading: $viewModel.isLoading) {
                     Task {
                         await viewModel.login()
                     }
@@ -79,7 +79,7 @@ struct LoginView: View {
                 Button(action: {
                     navigationManager.navigateToSignUp()
                 }) {
-                    Text("Pas encore de compte ? S'inscrire")
+                    Text("no_account_yet".translate(moduleName: "Authentication"))
                         .font(.system(size: 16, design: .rounded))
                         .foregroundColor(.white.opacity(0.7))
                 }

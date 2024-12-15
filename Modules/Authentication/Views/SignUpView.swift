@@ -28,7 +28,7 @@ struct SignUpView: View {
                         .opacity(isAnimating ? 1 : 0)
                         .offset(y: isAnimating ? 0 : 20)
                     
-                    Text("Inscription")
+                    Text("register_title".translate(moduleName: "Authentication"))
                         .font(.system(size: 32, weight: .bold, design: .rounded))
                         .foregroundColor(.white)
                         .opacity(isAnimating ? 1 : 0)
@@ -37,7 +37,7 @@ struct SignUpView: View {
                 // Form fields
                 VStack(spacing: 20) {
                     CustomTextField(
-                        placeholder: "Nom d'utilisateur",
+                        placeholder: "username_field".translate(moduleName: "Authentication"),
                         systemImage: "person",
                         isSecure: false,
                         text: $viewModel.username
@@ -46,7 +46,7 @@ struct SignUpView: View {
                     .offset(y: isAnimating ? 0 : 20)
                     
                     CustomTextField(
-                        placeholder: "Email",
+                        placeholder: "email_field".translate(moduleName: "Authentication"),
                         systemImage: "envelope",
                         isSecure: false,
                         text: $viewModel.email,
@@ -56,7 +56,7 @@ struct SignUpView: View {
                     .offset(y: isAnimating ? 0 : 20)
                     
                     CustomTextField(
-                        placeholder: "Mot de passe",
+                        placeholder: "password_field".translate(moduleName: "Authentication"),
                         systemImage: "lock",
                         isSecure: true,
                         text: $viewModel.password
@@ -65,7 +65,7 @@ struct SignUpView: View {
                     .offset(y: isAnimating ? 0 : 20)
                     
                     CustomTextField(
-                        placeholder: "Confirmer le mot de passe",
+                        placeholder: "confirm_password".translate(moduleName: "Authentication"),
                         systemImage: "lock",
                         isSecure: true,
                         text: $viewModel.confirmPassword
@@ -83,7 +83,7 @@ struct SignUpView: View {
                 }
                 
                 // Registration button
-                PrimaryButton(title: "S'inscrire", isLoading: $viewModel.isLoading) {
+                PrimaryButton(title: "register_action".translate(moduleName: "Authentication"), isLoading: $viewModel.isLoading) {
                     Task {
                         await viewModel.register()
                     }
@@ -95,7 +95,7 @@ struct SignUpView: View {
                 Button(action: {
                     navigationManager.navigateToLogin()
                 }) {
-                    Text("Déjà un compte ? Se connecter")
+                    Text("already_account".translate(moduleName: "Authentication"))
                         .font(.system(size: 16, design: .rounded))
                         .foregroundColor(.white.opacity(0.7))
                 }

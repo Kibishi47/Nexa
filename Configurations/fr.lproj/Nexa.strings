@@ -1,0 +1,32 @@
+/* 
+  Localizable.strings
+  Nexa
+
+  Created by Emmanuel Moulin on 15/12/2024.
+  
+*/
+
+/*
+ NEXA
+ */
+
+// Home
+"app_description" = "Ton assistant IA, au quotidien";
+"start" = "Commencer";
+
+// AlertManager
+"success" = "Succès";
+"error" = "Erreur";
+
+// Errors
+"empty_field" = "Certains champs sont vides";
+"invalid_confirm_password" = "La confirmation du mot de passe ne correspond pas";
+"invalid_credentials" = "Identifiants invalides";
+"email_not_confirmed" = "Adresse e-mail non confirmée";
+"email_exists" = "L'adresse e-mail existe déjà";
+"expired_session" = "Session expirée";
+"user_not_found" = "Utilisateur non trouvé";
+"weak_password" = "Mot de passe trop faible";
+"fail_fetch_data" = "Impossible de charger les données";
+"fail_update_data" = "Erreur lors de la mise à jour des données";
+"default_error" = "Une erreur est survenue, veuillez réessayer";

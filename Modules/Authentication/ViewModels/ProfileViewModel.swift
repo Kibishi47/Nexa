@@ -62,7 +62,7 @@ class ProfileViewModel: ObservableObject {
         setIsLoading(true)
         if dataManager.user == nil || dataManager.profile == nil {
             if await !dataManager.fetchUserData() {
-                setErrorMessage("Erreur lors de la récupération des données du profil")
+                setErrorMessage(NexaError.failToFetchData)
             }
         }
         getUserData()
@@ -90,9 +90,9 @@ class ProfileViewModel: ObservableObject {
                 guard let self = self else { return }
                 if success {
                     setUserData()
-                    self.setSuccessMessage("Nom d'utilisateur modifié avec succès")
+                    self.setSuccessMessage("alert_success_change_username".translate(moduleName: "Authentication"))
                 } else {
-                    self.setErrorMessage(error?.localizedDescription ?? "An error occur. Please try again later")
+                    self.setErrorMessage(error)
                 }
             }
         }
@@ -106,9 +106,9 @@ class ProfileViewModel: ObservableObject {
                 guard let self = self else { return }
                 if success {
                     setUserData()
-                    self.setSuccessMessage("Un email de confirmation vous a été envoyé")
+                    self.setSuccessMessage("alert_success_confirmation_email".translate(moduleName: "Authentication"))
                 } else {
-                    self.setErrorMessage(error?.localizedDescriptionInFrench ?? "Une erreur s'est produite. Veuillez réessayer plus tard")
+                    self.setErrorMessage(error)
                 }
             }
         }
@@ -119,12 +119,12 @@ class ProfileViewModel: ObservableObject {
         setIsPasswordLoading(true)
         if let user = user {
             guard !oldPassword.isEmpty, !newPassword.isEmpty, !confirmPassword.isEmpty else {
-                setPasswordError("Some fields are invalid")
+                setPasswordError(NexaError.emptyFields)
                 setIsPasswordLoading(false)
                 return
             }
             guard newPassword == confirmPassword else {
-                setPasswordError("Les mots de passe ne correspondent pas")
+                setPasswordError(NexaError.invalidConfirmPassword)
                 setIsPasswordLoading(false)
                 return
             }
@@ -136,7 +136,7 @@ class ProfileViewModel: ObservableObject {
                 if success {
                     isGoodPassword = true
                 } else {
-                    self.setPasswordError(error?.localizedDescriptionInFrench ?? "Une erreur s'est produite. Veuillez réessayer plus tard")
+                    self.setPasswordError(error)
                 }
             }
             
@@ -147,13 +147,13 @@ class ProfileViewModel: ObservableObject {
                         self.setUserData()
                         self.passwordValidated()
                     } else {
-                        self.setPasswordError(error?.localizedDescriptionInFrench ?? "Une erreur s'est produite. Veuillez réessayer plus tard")
+                        self.setPasswordError(error)
                     }
                 }
             }
             
         } else {
-            setPasswordError("Les données n'ont pas pu être chargé")
+            setPasswordError(NexaError.failToFetchData)
         }
         setIsPasswordLoading(false)
     }
@@ -163,7 +163,7 @@ class ProfileViewModel: ObservableObject {
         await authService.logout() { success, error in
             self.setIsLogoutLoading(false)
             if (!success) {
-                self.setErrorMessage("Une erreur s'est produite. Veuillez réessayer plus tard")
+                self.setErrorMessage(error)
             }
         }
     }
@@ -198,9 +198,13 @@ class ProfileViewModel: ObservableObject {
         }
     }
     
-    private func setErrorMessage(_ message: String) {
+    private func setErrorMessage(_ error: NexaError?) {
         DispatchQueue.main.async {
-            self.alertManager?.setError(message)
+            if let error = error {
+                self.alertManager?.setError(error.description)
+            } else {
+                self.alertManager?.setError(NexaError.unknownError.description)
+            }
         }
     }
     
@@ -213,14 +217,18 @@ class ProfileViewModel: ObservableObject {
             self.confirmPassword = ""
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.7){
-            self.setSuccessMessage("Vous avez modifié votre mot de passe")
+            self.setSuccessMessage("alert_success_change_password".translate(moduleName: "Authentication"))
         }
     }
     
-    private func setPasswordError(_ message: String) {
+    private func setPasswordError(_ error: NexaError?) {
         DispatchQueue.main.async {
             self.isShowingPasswordAlert = true
-            self.passwordError = message
+            if let error = error {
+                self.passwordError = error.description
+            } else {
+                self.passwordError = NexaError.unknownError.description
+            }
         }
     }
 }

@@ -22,16 +22,12 @@ class LoginViewModel: ObservableObject {
             await authService.login(email: email, password: password) {[weak self] success, error in
                 guard let self = self else { return }
                 if (!success) {
-                    if (error == nil) {
-                        self.setLoginErrorMessage("An error occurred, please try again later")
-                    } else {
-                        self.setLoginErrorMessage(error!.localizedDescriptionInFrench)
-                    }
+                    self.setLoginErrorMessage(error)
                 }
                 self.setIsLoading(false)
             }
         } else {
-            self.setLoginErrorMessage("Some fields are invalid")
+            self.setLoginErrorMessage(NexaError.emptyFields)
             self.setIsLoading(false)
         }
     }
@@ -40,9 +36,13 @@ class LoginViewModel: ObservableObject {
         return !email.isEmpty && !password.isEmpty
     }
     
-    private func setLoginErrorMessage(_ message: String = "") {
+    private func setLoginErrorMessage(_ error: NexaError?) {
         DispatchQueue.main.async {
-            self.loginErrorMessage = message
+            if let error = error {
+                self.loginErrorMessage = error.description
+            } else {
+                self.loginErrorMessage = NexaError.unknownError.description
+            }
         }
     }
     

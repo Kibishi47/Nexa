@@ -1,0 +1,32 @@
+/* 
+  Localizable.strings
+  Nexa
+
+  Created by Emmanuel Moulin on 15/12/2024.
+  
+*/
+
+/*
+ NEXA
+ */
+
+// Home
+"app_description" = "Your daily AI assistant";
+"start" = "Start";
+
+// AlertManager
+"success" = "Success";
+"error" = "Error";
+
+// Errors
+"empty_field" = "Some fields are empty";
+"invalid_confirm_password" = "Password confirmation does not match the password";
+"invalid_credentials" = "Invalid credentials";
+"email_not_confirmed" = "Email not confirmed";
+"email_exists" = "Email already exists";
+"expired_session" = "Expired session";
+"user_not_found" = "User not found";
+"weak_password" = "Password too weak";
+"fail_fetch_data" = "Failed to load data";
+"fail_update_data" = "Error while updating data";
+"default_error" = "An error occur, please try again";

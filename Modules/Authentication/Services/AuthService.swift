@@ -69,7 +69,7 @@ class AuthService {
         }
     }
     
-    func register(email: String, password: String, username: String, completion: @escaping (_ isSucceed: Bool, _ error: Supabase.AuthError?) -> Void) async {
+    func register(email: String, password: String, username: String, completion: @escaping (_ isSucceed: Bool, _ error: NexaError?) -> Void) async {
         do {
             try await supabaseClient.auth.signUp(email: email, password: password, data: [
                 "username": .string(username)
@@ -77,37 +77,37 @@ class AuthService {
             completion(true, nil)
         } catch let authError as Supabase.AuthError {
             print("Failed to register. \(authError.localizedDescription)")
-            completion(false, authError)
+            completion(false, authError.toNexaError)
         } catch {
             print("Failed to register. \(error.localizedDescription)")
-            completion(false, nil)
+            completion(false, .unknownError)
         }
     }
     
-    func login(email: String, password: String, blockingNotify: Bool = false, completion: @escaping (_ isSucceed: Bool, _ error: Supabase.AuthError?) -> Void) async {
+    func login(email: String, password: String, blockingNotify: Bool = false, completion: @escaping (_ isSucceed: Bool, _ error: NexaError?) -> Void) async {
         allowNotify = !blockingNotify
         do {
             try await supabaseClient.auth.signIn(email: email, password: password)
             completion(true, nil)
         } catch let authError as Supabase.AuthError {
             print("Failed to login. \(authError.localizedDescription)")
-            completion(false, authError)
+            completion(false, authError.toNexaError)
         } catch {
             print("Failed to login. \(error.localizedDescription)")
-            completion(false, nil)
+            completion(false, .unknownError)
         }
     }
     
-    func logout(completion: @escaping (_ isSucceed: Bool, _ error: Supabase.AuthError?) -> Void) async {
+    func logout(completion: @escaping (_ isSucceed: Bool, _ error: NexaError?) -> Void) async {
         do {
             try await supabaseClient.auth.signOut()
             completion(true, nil)
         } catch let authError as Supabase.AuthError {
             print("Failed to register. \(authError.localizedDescription)")
-            completion(false, authError)
+            completion(false, authError.toNexaError)
         } catch {
             print("Failed to logout. \(error.localizedDescription)")
-            completion(false, nil)
+            completion(false, .unknownError)
         }
     }
     
@@ -121,7 +121,7 @@ class AuthService {
                 try await supabaseClient.auth.refreshSession()
             }
         } catch {
-            print("error refresh session: \(error)")
+            print("error refresh session: \(error.localizedDescription)")
         }
     }
     
@@ -129,34 +129,34 @@ class AuthService {
         do {
             return try await supabaseClient.auth.user()
         } catch {
-            print("error get user: \(error)")
+            print("error get user: \(error.localizedDescription)")
             return nil
         }
     }
     
-    func updateUserEmail(user: Supabase.User, completion: @escaping (_ isSucceed: Bool, _ error: Supabase.AuthError?) -> Void) async {
+    func updateUserEmail(user: Supabase.User, completion: @escaping (_ isSucceed: Bool, _ error: NexaError?) -> Void) async {
         do {
             let _ = try await supabaseClient.auth.update(user: UserAttributes(email: user.email))
             completion(true, nil)
         } catch let authError as Supabase.AuthError {
-            print("error updating user email: \(authError)")
-            completion(false, authError)
+            print("error updating user email: \(authError.localizedDescription)")
+            completion(false, authError.toNexaError)
         } catch {
-            print("error updating user email: \(error)")
-            completion(false, nil)
+            print("error updating user email: \(error.localizedDescription)")
+            completion(false, .unknownError)
         }
     }
     
-    func updateUserPassword(password: String, completion: @escaping (_ isSucceed: Bool, _ error: Supabase.AuthError?) -> Void) async {
+    func updateUserPassword(password: String, completion: @escaping (_ isSucceed: Bool, _ error: NexaError?) -> Void) async {
         do {
             let _ = try await supabaseClient.auth.update(user: UserAttributes(password: password))
             completion(true, nil)
         } catch let authError as Supabase.AuthError {
-            print("error updating user password: \(authError)")
-            completion(false, authError)
+            print("error updating user password: \(authError.localizedDescription)")
+            completion(false, authError.toNexaError)
         } catch {
-            print("error updating user password: \(error)")
-            completion(false, nil)
+            print("error updating user password: \(error.localizedDescription)")
+            completion(false, .unknownError)
         }
     }
 }

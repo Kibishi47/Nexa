@@ -25,7 +25,6 @@ struct ChatBubble: View {
                     AIMascot(animationsEnabled: false)
                         .scaleEffect(0.5)
                         .frame(width: 5, height: 5)
-                        //.padding(.bottom, 4)
                 }
                 
                 Text(message.content)

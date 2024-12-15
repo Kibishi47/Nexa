@@ -32,12 +32,12 @@ class ProfileService {
                 .value
             return profile
         } catch {
-            print("error getting profile: \(error)")
+            print("error getting profile: \(error.localizedDescription)")
             return nil
         }
     }
     
-    func updateUsernameProfile(_ profile: Profile, completion: @escaping (_ success: Bool, _ error: Supabase.PostgrestError?) -> Void) async {
+    func updateUsernameProfile(_ profile: Profile, completion: @escaping (_ success: Bool, _ error: NexaError?) -> Void) async {
         do {
             try await supabaseClient
                 .from("profiles")
@@ -46,11 +46,11 @@ class ProfileService {
                 .execute()
             completion(true, nil)
         } catch let supabaseError as Supabase.PostgrestError {
-            print("error updating username profile: \(supabaseError)")
-            completion(false, supabaseError)
+            print("error updating username profile: \(supabaseError.localizedDescription)")
+            completion(false, .failToUpdateData)
         } catch {
-            print("error updating username profile: \(error)")
-            completion(false, nil)
+            print("error updating username profile: \(error.localizedDescription)")
+            completion(false, .unknownError)
         }
     }
 }

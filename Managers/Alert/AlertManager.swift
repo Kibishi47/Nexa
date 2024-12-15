@@ -14,14 +14,14 @@ class AlertManager: ObservableObject {
     @Published var message: String = ""
     
     func setSuccess(_ message: String) {
-        self.title = "Succès"
+        self.title = "success".translate()
         self.message = message
         self.success = true
         self.presented = true
     }
     
     func setError(_ message: String) {
-        self.title = "Erreur"
+        self.title = "error".translate()
         self.message = message
         self.success = false
         self.presented = true

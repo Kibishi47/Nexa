@@ -28,7 +28,7 @@ struct ChangePasswordView: View {
             .padding()
             
             // Title
-            Text("Changer le mot de passe")
+            Text("change_password_title".translate(moduleName: "Authentication"))
                 .font(.system(size: 28, weight: .bold))
                 .foregroundColor(.white)
                 .padding(.bottom, 20)
@@ -36,21 +36,21 @@ struct ChangePasswordView: View {
             // Password fields
             VStack(spacing: 16) {
                 CustomTextField(
-                    placeholder: "Mot de passe actuel",
+                    placeholder: "actual_password".translate(moduleName: "Authentication"),
                     systemImage: "lock",
                     isSecure: true,
                     text: $viewModel.oldPassword
                 )
                 
                 CustomTextField(
-                    placeholder: "Nouveau mot de passe",
+                    placeholder: "new_password".translate(moduleName: "Authentication"),
                     systemImage: "lock.rotation",
                     isSecure: true,
                     text: $viewModel.newPassword
                 )
                 
                 CustomTextField(
-                    placeholder: "Confirmer le nouveau mot de passe",
+                    placeholder: "confirm_new_password".translate(moduleName: "Authentication"),
                     systemImage: "lock.rotation",
                     isSecure: true,
                     text: $viewModel.confirmPassword
@@ -62,7 +62,7 @@ struct ChangePasswordView: View {
             
             // Change password button
             SuccessButton(
-                title: "Changer le mot de passe",
+                title: "change_password_action".translate(moduleName: "Authentication"),
                 isLoading: $viewModel.isPasswordLoading
             ) {
                 Task {
@@ -82,7 +82,7 @@ struct ChangePasswordView: View {
         )
         .alert(isPresented: $viewModel.isShowingPasswordAlert) {
             Alert(
-                title: Text("Erreur"),
+                title: Text("alert_error_title".translate(moduleName: "Authentication")),
                 message: Text(viewModel.passwordError),
                 dismissButton: .default(Text("OK"))
             )

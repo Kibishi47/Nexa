@@ -20,20 +20,23 @@ class SignUpViewModel: ObservableObject {
     
     func register() async {
         self.setIsLoading(true)
-        if (checkFields()) {
-            await authService.register(email: email, password: password, username: username) {[weak self] success, error in
-                guard let self = self else { return }
-                if (!success) {
-                    if (error == nil) {
-                        self.setRegisterErrorMessage("An error occurred, please try again later")
-                    } else {
-                        self.setRegisterErrorMessage(error!.localizedDescriptionInFrench)
-                    }
-                }
-                self.setIsLoading(false)
+        
+        guard !email.isEmpty, !password.isEmpty else {
+            setRegisterErrorMessage(NexaError.emptyFields)
+            self.setIsLoading(false)
+            return
+        }
+        guard password == confirmPassword else {
+            setRegisterErrorMessage(NexaError.invalidConfirmPassword)
+            self.setIsLoading(false)
+            return
+        }
+        
+        await authService.register(email: email, password: password, username: username) {[weak self] success, error in
+            guard let self = self else { return }
+            if (!success) {
+                self.setRegisterErrorMessage(error)
             }
-        } else {
-            setRegisterErrorMessage("Some fields are invalid")
             self.setIsLoading(false)
         }
     }
@@ -42,9 +45,13 @@ class SignUpViewModel: ObservableObject {
         return !email.isEmpty && !password.isEmpty && !username.isEmpty && password == confirmPassword
     }
     
-    private func setRegisterErrorMessage(_ message: String = "") {
+    private func setRegisterErrorMessage(_ error: NexaError?) {
         DispatchQueue.main.async {
-            self.registerErrorMessage = message
+            if let error = error {
+                self.registerErrorMessage = error.description
+            } else {
+                self.registerErrorMessage = NexaError.unknownError.description
+            }
         }
     }
     

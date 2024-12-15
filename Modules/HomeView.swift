@@ -35,7 +35,7 @@ struct HomeView: View {
                         .foregroundColor(.white)
                         .transition(.move(edge: .top).combined(with: .opacity))
                     
-                    Text("Ton assistant IA, au quotidien")
+                    Text("app_description".translate())
                         .font(.system(size: 20, weight: .light, design: .rounded))
                         .foregroundColor(.gray)
                         .transition(.move(edge: .top).combined(with: .opacity))
@@ -43,7 +43,7 @@ struct HomeView: View {
                 
                 // Start button
                 if showButton {
-                    PrimaryButton(title: "Commencer") {
+                    PrimaryButton(title: "start".translate()) {
                         if isFirstLaunch {
                             navigationManager.navigateToSignUp()
                             isFirstLaunch = false

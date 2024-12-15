@@ -1,0 +1,39 @@
+/* 
+  Authentication.strings
+  Nexa
+
+  Created by Emmanuel Moulin on 15/12/2024.
+  
+*/
+
+// Fields
+"username_field" = "Username";
+"email_field" = "Email";
+"password_field" = "Password";
+"confirm_password" = "Confirm password";
+"actual_password" = "Actual password";
+"new_password" = "New password";
+"confirm_new_password" = "Confirm new password";
+
+// Titles
+"connection_title" = "Connection";
+"register_title" = "Register";
+"profile_title" = "Profile";
+"change_password_title" = "Change your password";
+
+// Actions
+"connect_action" = "Sign in";
+"register_action" = "Sign up";
+"logout_action" = "Sign out";
+"change_password_action" = "Change password";
+
+// Redirects
+"no_account_yet" = "No account yet? Register";
+"already_account" = "Already an account? Sign in";
+"change_password" = "Change your password";
+
+// Alert
+"alert_error_title" = "Error";
+"alert_success_change_username" = "Username successfully modified";
+"alert_success_confirmation_email" = "A confirmation email has been sent to you";
+"alert_success_change_password" = "You have changed your password";

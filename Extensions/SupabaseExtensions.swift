@@ -10,36 +10,22 @@ import Supabase
 
 extension Supabase.AuthError {
     
-    var localizedDescriptionInFrench: String {
+    var toNexaError: NexaError {
         switch self.errorCode.rawValue {
-        case "anonymous_provider_disabled":
-            return "Connexion anonyme désactivée."
         case "invalid_credentials":
-            return "Identifiants invalides."
+            return .invalidCredentials
         case "email_not_confirmed":
-            return "E-mail non confirmé."
+            return .emailNotConfirmed
         case "email_exists":
-            return "E-mail déjà utilisé."
+            return .emailExists
         case "session_expired":
-            return "Session expirée."
+            return .expiredSession
         case "user_not_found":
-            return "Utilisateur introuvable."
+            return .userNotFound
         case "weak_password":
-            return "Mot de passe trop faible."
-        case "over_request_rate_limit":
-            return "Trop de requêtes. Réessayez plus tard."
-        case "user_banned":
-            return "Utilisateur banni."
-        case "provider_disabled":
-            return "Fournisseur désactivé."
-        case "otp_expired":
-            return "Code OTP expiré."
-        case "phone_exists":
-            return "Téléphone déjà utilisé."
-        case "email_provider_disabled":
-            return "Inscription par e-mail désactivée."
+            return .weakPassword
         default:
-            return "Une erreur inconnue est survenue. Veuillez réessayer."
+            return .unknownError
         }
     }
 }

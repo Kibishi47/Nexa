@@ -16,7 +16,7 @@ struct ProfileView: View {
         ZStack {
             VStack(spacing: 24) {
                 // Header
-                NavigateBackHeader(title: "Profil")
+                NavigateBackHeader(title: "profile_title".translate(moduleName: "Authentication"))
                     .padding(.horizontal)
                     .padding(.bottom)
                 
@@ -86,7 +86,7 @@ struct ProfileView: View {
                         VStack(spacing: 8) {
                             // Email Field
                             EditableTextField(
-                                placeholder: "Email",
+                                placeholder: "email_field".translate(moduleName: "Authentication"),
                                 systemImage: "envelope",
                                 text: Binding(
                                     get: {
@@ -103,7 +103,7 @@ struct ProfileView: View {
                             
                             // Username Field
                             EditableTextField(
-                                placeholder: "Nom d'utilisateur",
+                                placeholder: "username_field".translate(moduleName: "Authentication"),
                                 systemImage: "person",
                                 text: Binding(
                                     get: {
@@ -125,12 +125,12 @@ struct ProfileView: View {
                         
                         // Actions Section
                         VStack(spacing: 16) {
-                            SecondaryButton(title: "Modifier les identifiants") {
+                            SecondaryButton(title: "change_password".translate(moduleName: "Authentication")) {
                                 viewModel.isShowingChangePassword = true
                             }
                             
                             AlertButton(
-                                title: "Déconnexion",
+                                title: "logout_action".translate(moduleName: "Authentication"),
                                 isLoading: $viewModel.isLogoutLoading
                             ) {
                                 Task {
