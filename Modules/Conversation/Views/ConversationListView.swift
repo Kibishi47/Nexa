@@ -7,10 +7,10 @@
 
 import SwiftUI
 
-struct ChatListView: View {
+struct ConversationListView: View {
     @EnvironmentObject private var navigationManager: NavigationManager
-    @State private var chats: [Chat] = ChatRepository().getChats()
-    @State private var isShowingNewChat = false
+    let feature: AIFeature
+    @State private var conversations: [Conversation] = []
     
     var body: some View {
         VStack(spacing: 0) {
@@ -22,15 +22,15 @@ struct ChatListView: View {
             ScrollView {
                 LazyVStack(spacing: 16) {
                     Button(action: {
-                        navigationManager.navigateToChat(id: nil)
+                        navigationManager.navigateToConversation(conversation: nil, feature: feature)
                     }, label: {
-                        NewChatRowView()
+                        NewConversationRowView(feature: feature)
                     })
-                    ForEach(chats) { chat in
+                    ForEach(conversations) { conversation in
                         Button(action: {
-                            navigationManager.navigateToChat(id: chat.id)
+                            navigationManager.navigateToConversation(conversation: conversation, feature: feature)
                         }, label: {
-                            ChatRowView(chat: chat)
+                            ConversationRowView(conversation: conversation)
                         })
                     }
                 }
@@ -45,6 +45,6 @@ struct ChatListView: View {
 }
 
 #Preview {
-    ChatListView()
+    ConversationListView(feature: .chat)
         .environmentObject(NavigationManager())
 }

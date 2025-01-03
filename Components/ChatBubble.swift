@@ -8,10 +8,10 @@
 import SwiftUI
 
 struct ChatBubble: View {
-    let message: ChatMessage
+    let message: Message
     let hideNexa: Bool
     
-    init(message: ChatMessage, hideNexa: Bool = false) {
+    init(message: Message, hideNexa: Bool = false) {
         self.message = message
         self.hideNexa = hideNexa
     }
@@ -44,11 +44,12 @@ struct ChatBubble: View {
     ZStack {
         Color.black.edgesIgnoringSafeArea(.all)
         ChatBubble(
-            message: ChatMessage(
+            message: Message(
                 id: UUID(),
+                conversationId: UUID(),
+                role: "assistant",
                 content: "Bonjour ! Je suis Nexa, votre assistant IA. Comment puis-je vous aider aujourd'hui ?",
-                isUser: false,
-                timestamp: Date()
+                createdAt: Date()
             )
         )
     }

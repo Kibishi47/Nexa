@@ -7,22 +7,24 @@
 
 import SwiftUI
 
-struct NewChatRowView: View {
+struct NewConversationRowView: View {
+    let feature: AIFeature
+    
     var body: some View {
         HStack(spacing: 16) {
             ZStack {
                 Circle()
-                    .fill(Color.blue.opacity(0.2))
+                    .fill(feature.color.opacity(0.2))
                     .frame(width: 40, height: 40)
                 
                 Image(systemName: "plus")
                     .font(.system(size: 20, weight: .bold))
-                    .foregroundColor(.blue)
+                    .foregroundColor(feature.color)
             }
             
             Text("Nouvelle conversation")
                 .font(.headline)
-                .foregroundColor(.blue)
+                .foregroundColor(feature.color)
             
             Spacer()
             
@@ -31,11 +33,11 @@ struct NewChatRowView: View {
                 .foregroundColor(.gray)
         }
         .padding()
-        .background(Color.blue.opacity(0.05))
+        .background(feature.color.opacity(0.05))
         .cornerRadius(12)
         .overlay(
             RoundedRectangle(cornerRadius: 12)
-                .stroke(Color.blue.opacity(0.3), lineWidth: 1)
+                .stroke(feature.color.opacity(0.3), lineWidth: 1)
         )
     }
 }
@@ -43,7 +45,7 @@ struct NewChatRowView: View {
 #Preview {
     ZStack {
         Color.black.edgesIgnoringSafeArea(.all)
-        NewChatRowView()
+        NewConversationRowView(feature: .translation)
             .padding()
     }
 }

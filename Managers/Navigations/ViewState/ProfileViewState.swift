@@ -49,11 +49,11 @@ class ProfileViewState: ViewState {
         return
     }
     
-    func navigateToChatList() {
+    func navigateToConversationList(feature: AIFeature) {
         return
     }
     
-    func navigateToChat(id: UUID?) {
+    func navigateToConversation(conversation: Conversation?, feature: AIFeature) {
         return
     }
 }

@@ -7,13 +7,13 @@
 
 import SwiftUI
 
-class ChatListViewState: ViewState {
+class ConversationListViewState: ViewState {
     
     var navigationManager: NavigationManager
     
-    init(_ navigationManager: NavigationManager) {
+    init(_ navigationManager: NavigationManager, _ feature: AIFeature) {
         self.navigationManager = navigationManager
-        self.navigationManager.currentView = AnyView(ChatListView())
+        self.navigationManager.currentView = AnyView(ConversationListView(feature: feature))
         self.navigationManager.currentMenuItem = .main
     }
     
@@ -49,11 +49,11 @@ class ChatListViewState: ViewState {
         return
     }
     
-    func navigateToChatList() {
+    func navigateToConversationList(feature: AIFeature) {
         return
     }
     
-    func navigateToChat(id: UUID?) {
-        navigationManager.updateView(ChatViewState(navigationManager, id: id))
+    func navigateToConversation(conversation: Conversation?, feature: AIFeature) {
+        navigationManager.updateView(ConversationViewState(navigationManager, conversation: conversation, feature: feature))
     }
 }

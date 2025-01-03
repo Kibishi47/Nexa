@@ -49,11 +49,11 @@ class MainViewState: ViewState {
         navigationManager.updateView(HistoryViewState(navigationManager))
     }
     
-    func navigateToChatList() {
-        navigationManager.updateView(ChatListViewState(navigationManager))
+    func navigateToConversationList(feature: AIFeature) {
+        navigationManager.updateView(ConversationListViewState(navigationManager, feature))
     }
     
-    func navigateToChat(id: UUID?) {
+    func navigateToConversation(conversation: Conversation?, feature: AIFeature) {
         return
     }
 }

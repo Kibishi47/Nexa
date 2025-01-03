@@ -91,17 +91,17 @@ class NavigationManager: ObservableObject, AuthService.Observer {
         }
     }
     
-    func navigateToChatList() {
+    func navigateToConversationList(feature: AIFeature) {
         if (authService.isAuthenticated()) {
-            self.viewState.navigateToChatList()
+            self.viewState.navigateToConversationList(feature: feature)
         } else {
             self.viewState.navigateToHome()
         }
     }
     
-    func navigateToChat(id: UUID?) {
+    func navigateToConversation(conversation: Conversation?, feature: AIFeature) {
         if (authService.isAuthenticated()) {
-            self.viewState.navigateToChat(id: id)
+            self.viewState.navigateToConversation(conversation: conversation, feature: feature)
         } else {
             self.viewState.navigateToHome()
         }

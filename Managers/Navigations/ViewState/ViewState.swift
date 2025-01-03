@@ -16,6 +16,6 @@ protocol ViewState {
     func navigateToProfile()
     func navigateToSubscription()
     func navigateToHistory()
-    func navigateToChatList()
-    func navigateToChat(id: UUID?)
+    func navigateToConversationList(feature: AIFeature)
+    func navigateToConversation(conversation: Conversation?, feature: AIFeature)
 }

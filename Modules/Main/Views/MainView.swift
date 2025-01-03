@@ -10,16 +10,10 @@ import SwiftUI
 struct MainView: View {
     @EnvironmentObject private var navigationManager: NavigationManager
     @State private var isMenuShowing = false
-    @State private var searchText = ""
     @State private var currentSubscription: SubscriptionPlan = SubscriptionRepository().getCurrentPlan()
     
-    let features: [AIFeature] = [
-        .chat, .imageGeneration, .transcription, .translation, .summarization, .documentAnalysis, .socialPostGeneration, .voiceCustomization
-    ]
-    
+    let features: [AIFeature] = FeatureRepository().getHistoryItems()
     let recentHistory: [HistoryItem] = Array(HistoryRepository().getHistoryItems().prefix(3))
-    
-    let username: String = DataManager.getInstance().profile?.username ?? "TEST"
     
     var body: some View {
         ZStack {
@@ -76,24 +70,8 @@ struct MainView: View {
                         ], spacing: 16) {
                             ForEach(features.indices, id: \.self) { index in
                                 Button(action: {
-                                    switch features[index] {
-                                        case .chat:
-                                            navigationManager.navigateToChatList()
-                                        case .imageGeneration:
-                                            navigationManager.navigateToMain()
-                                        case .transcription:
-                                            navigationManager.navigateToMain()
-                                        case .translation:
-                                            navigationManager.navigateToMain()
-                                        case .summarization:
-                                            navigationManager.navigateToMain()
-                                        case .documentAnalysis:
-                                            navigationManager.navigateToMain()
-                                        case .socialPostGeneration:
-                                            navigationManager.navigateToMain()
-                                        case .voiceCustomization:
-                                            navigationManager.navigateToMain()
-                                    }
+//                                    navigationManager.navigateToConversationList(feature: .chat)
+                                    navigationManager.navigateToConversationList(feature: features[index])
                                 }, label: {
                                     FeatureCard(feature: features[index])
                                 })

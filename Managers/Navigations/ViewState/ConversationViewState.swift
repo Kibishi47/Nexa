@@ -7,18 +7,20 @@
 
 import SwiftUI
 
-class ChatViewState: ViewState {
+class ConversationViewState: ViewState {
     
     var navigationManager: NavigationManager
+    private let feature: AIFeature
     
-    init(_ navigationManager: NavigationManager, id: UUID?) {
+    init(_ navigationManager: NavigationManager, conversation: Conversation?, feature: AIFeature) {
         self.navigationManager = navigationManager
-        self.navigationManager.currentView = AnyView(ChatView(chatId: id))
+        self.navigationManager.currentView = AnyView(ConversationView(conversation: conversation, feature: feature))
         self.navigationManager.currentMenuItem = .main
+        self.feature = feature
     }
     
     func navigateBack() {
-        navigationManager.navigateToChatList()
+        navigationManager.navigateToConversationList(feature: feature)
     }
     
     func navigateToHome() {
@@ -49,11 +51,11 @@ class ChatViewState: ViewState {
         return
     }
     
-    func navigateToChatList() {
-        navigationManager.updateView(ChatListViewState(navigationManager))
+    func navigateToConversationList(feature: AIFeature) {
+        navigationManager.updateView(ConversationListViewState(navigationManager, feature))
     }
     
-    func navigateToChat(id: UUID?) {
-        
+    func navigateToConversation(conversation: Conversation?, feature: AIFeature) {
+        return
     }
 }
