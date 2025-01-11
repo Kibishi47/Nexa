@@ -9,13 +9,20 @@ import Foundation
 
 class TranslationConversationStrategy: ConversationStrategy {
     var chatGPTService = ChatGPTService.getInstance()
+    var dataManager: DataManager
+    var feature: AIFeature
     
-    func sendData(message: String) async -> String {
+    required init(_ feature: AIFeature) {
+        self.dataManager = DataManager.getInstance()
+        self.feature = feature
+    }
+    
+    func sendData(conversation: Conversation, message: String) async -> String {
         let data = [
             "target_language": "english",
             "text": message
         ]
         let response = await chatGPTService.send(url: "translate", data: data)
-        return response["response"]! as! String
+        return getGPTMessage(response)
     }
 }

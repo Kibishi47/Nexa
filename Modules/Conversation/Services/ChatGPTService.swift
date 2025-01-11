@@ -23,9 +23,9 @@ class ChatGPTService {
         return instance!
     }
     
-    func send(url: String, data: [String: Any]) async -> [String: Any] {
+    func send(url: String, data: [String: String]) async -> [String: Any] {
         do {
-            var response = try await APIService.request(
+            let response = try await APIService.request(
                 url: self.stringUrl + url,
                 method: .post,
                 body: data

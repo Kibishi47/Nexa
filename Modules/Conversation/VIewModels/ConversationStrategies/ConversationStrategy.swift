@@ -9,5 +9,15 @@ import Foundation
 
 protocol ConversationStrategy {
     var chatGPTService: ChatGPTService { get }
-    func sendData(message: String) async -> String
+    var dataManager: DataManager { get set }
+    var feature: AIFeature { get set }
+    init(_ feature: AIFeature)
+    func sendData(conversation: Conversation, message: String) async -> String
+}
+
+extension ConversationStrategy {
+    func getGPTMessage(_ GPTResponse: [String: Any]) -> String {
+        let response = GPTResponse["response"]! as! [String: Any]
+        return response["message"]! as! String
+    }
 }

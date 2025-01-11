@@ -12,7 +12,7 @@ struct Message: Identifiable, Codable, Equatable {
     let conversationId: UUID
     let role: String
     let content: String
-    let createdAt: Date
+    let createdAt: CreatedAtSupabase
     
     enum CodingKeys: String, CodingKey {
         case id

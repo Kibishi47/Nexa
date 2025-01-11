@@ -36,7 +36,7 @@ struct ConversationRowView: View {
             
             Spacer()
             
-            Text(conversation.createdAt.toFormat("HH:mm"))
+            Text(conversation.lastDateActivity.toFormat("HH:mm"))
                 .font(.caption)
                 .foregroundColor(.gray)
         }
@@ -54,10 +54,7 @@ struct ConversationRowView: View {
             userId: UUID(),
             title: "Discussion de chose",
             featureName: "translation",
-            createdAt: Date(),
-            messages: [
-                Message(id: UUID(), conversationId: UUID(), role: "user", content: "Voici un petit test de quelque chose", createdAt: Date())
-            ]
+            createdAt: CreatedAtSupabase(Date().ISO8601Format())
         ))
     }
 }

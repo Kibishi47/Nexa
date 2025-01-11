@@ -49,7 +49,7 @@ struct ChatBubble: View {
                 conversationId: UUID(),
                 role: "assistant",
                 content: "Bonjour ! Je suis Nexa, votre assistant IA. Comment puis-je vous aider aujourd'hui ?",
-                createdAt: Date()
+                createdAt: CreatedAtSupabase(Date().ISO8601Format())
             )
         )
     }

@@ -12,8 +12,8 @@ struct Conversation: Identifiable, Codable {
     let userId: UUID
     var title: String
     var featureName: String
-    let createdAt: Date
-    var messages: [Message]
+    var createdAt: CreatedAtSupabase
+    var messages: [Message] = []
     
     enum CodingKeys: String, CodingKey {
         case id
@@ -30,5 +30,17 @@ struct Conversation: Identifiable, Codable {
     
     var lastMessage: Message? {
         messages.last
+    }
+    
+//    var messages: [Message] {
+//        []
+//    }
+    
+    var date: Date {
+        createdAt.toDate()
+    }
+    
+    var lastDateActivity: Date {
+        messages.last?.createdAt.toDate() ?? date
     }
 }

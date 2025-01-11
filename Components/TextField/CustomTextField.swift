@@ -39,9 +39,11 @@ struct CustomTextField: View {
 
     var body: some View {
         HStack {
-            Image(systemName: systemImage)
-                .foregroundColor(.white.opacity(0.7))
-                .frame(width: 20)
+            if (!systemImage.isEmpty) {
+                Image(systemName: systemImage)
+                    .foregroundColor(.white.opacity(0.7))
+                    .frame(width: 20)
+            }
 
             if isSecure {
                 SecureField(placeholder, text: $text)

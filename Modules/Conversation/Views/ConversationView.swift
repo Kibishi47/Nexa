@@ -45,6 +45,9 @@ struct ConversationView: View {
                         proxy.scrollTo(viewModel.messages.last?.id, anchor: .bottom)
                     }
                 }
+                .onAppear {
+                    proxy.scrollTo(viewModel.messages.last?.id, anchor: .bottom)
+                }
             }
             
             // Typing indicator
@@ -61,12 +64,7 @@ struct ConversationView: View {
             
             // Input area
             HStack(spacing: 12) {
-                TextField("Tapez votre message...", text: $viewModel.userText)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .padding(8)
-                    .background(Color.white.opacity(0.1))
-                    .cornerRadius(20)
-                    .foregroundColor(.black)
+                CustomTextField(placeholder: "Tapez votre message...", systemImage: "", isSecure: false, text: $viewModel.userText)
                 
                 Button(action: {
                     Task {

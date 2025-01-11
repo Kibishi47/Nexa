@@ -9,10 +9,21 @@ import Foundation
 
 class MessageConversationStrategy: ConversationStrategy {
     var chatGPTService = ChatGPTService.getInstance()
+    var dataManager: DataManager
+    var feature: AIFeature
     
-    func sendData(message: String) async -> String {
-        let data = ["prompt": message]
-        let response = await chatGPTService.send(url: "message", data: data)
-        return response["response"]! as! String
+    required init(_ feature: AIFeature) {
+        self.dataManager = DataManager.getInstance()
+        self.feature = feature
+    }
+    
+    func sendData(conversation: Conversation, message: String) async -> String {
+        let data = [
+            "prompt": message,
+            "conversation_id": conversation.id.uuidString,
+            "user_id": dataManager.user?.id.uuidString ?? ""
+        ] as [String : String]
+        let response = await chatGPTService.send(url: feature.url, data: data)
+        return getGPTMessage(response)
     }
 }

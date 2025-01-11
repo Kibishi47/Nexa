@@ -86,4 +86,30 @@ enum AIFeature: String, Identifiable, CaseIterable {
     var key: String {
         String(describing: self)
     }
+    
+    var url: String {
+        switch self {
+        case .chat:
+            return "message"
+        case .imageGeneration:
+            return "images"
+        case .translation:
+            return "translate"
+        default:
+            return "message"
+        }
+    }
+    
+    var conversationStrategy: ConversationStrategy {
+        switch self {
+        case .chat:
+            return MessageConversationStrategy(self)
+        case .imageGeneration:
+            return ImageConversationStrategy(self)
+        case .translation:
+            return TranslationConversationStrategy(self)
+        default:
+            return MessageConversationStrategy(self)
+        }
+    }
 }

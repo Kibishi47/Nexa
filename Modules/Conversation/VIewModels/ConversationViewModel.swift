@@ -16,36 +16,40 @@ class ConversationViewModel: ObservableObject {
     var strategy: ConversationStrategy
     
     init(conversation: Conversation?, feature: AIFeature) {
-        let _conversation = conversation ?? Conversation(id: UUID(), userId: UUID(), title: "", featureName: feature.key, createdAt: Date(), messages: [])
+        let _conversation = conversation ?? Conversation(
+            id: UUID(),
+            userId: UUID(),
+            title: "",
+            featureName: feature.key,
+            createdAt: CreatedAtSupabase(Date().ISO8601Format())
+        )
         self.conversation = _conversation
-        self.strategy = {
-            switch _conversation.feature {
-            case .chat:
-                return MessageConversationStrategy()
-            case .imageGeneration:
-                return ImageConversationStrategy()
-            case .translation:
-                return TranslationConversationStrategy()
-            default:
-                return MessageConversationStrategy()
-            }
-        }()
+        self.messages = self.conversation.messages
+        self.strategy = feature.conversationStrategy
         
-        self.addMessage(message: _conversation.feature.firstMessage, role: "assistant")
+        if (conversation == nil) {
+            self.addMessage(message: _conversation.feature.firstMessage, role: "assistant")
+        }
     }
     
     func submitText() async {
+        let text = self.userText
         self.setUserText("")
-        self.addMessage(message: userText, role: "user")
+        self.addMessage(message: text, role: "user")
         
         self.setIsTyping(true)
-        let AIResponse = await strategy.sendData(message: userText)
+        let AIResponse = await strategy.sendData(conversation: self.conversation, message: text)
         self.addMessage(message: AIResponse, role: "assistant")
         self.setIsTyping(false)
     }
     
     private func addMessage(message: String, role: String) {
-        let newMessage = Message(id: UUID(), conversationId: conversation.id, role: role, content: message, createdAt: Date())
+        let newMessage = Message(
+            id: UUID(),
+            conversationId: conversation.id,
+            role: role,
+            content: message,
+            createdAt: CreatedAtSupabase(Date().ISO8601Format()))
         DispatchQueue.main.async {
             self.messages.append(newMessage)
         }

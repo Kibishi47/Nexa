@@ -9,17 +9,7 @@ import SwiftUI
 
 struct HistoryView: View {
     @EnvironmentObject private var navigationManager: NavigationManager
-    @State private var searchText = ""
-    
-    let historyItems: [HistoryItem] = HistoryRepository().getHistoryItems()
-    
-    var filteredItems: [HistoryItem] {
-        if searchText.isEmpty {
-            return historyItems
-        } else {
-            return historyItems.filter { $0.title.lowercased().contains(searchText.lowercased()) }
-        }
-    }
+    @StateObject private var viewModel = HistoryViewModel()
     
     var body: some View {
         VStack(spacing: 0) {
@@ -31,7 +21,7 @@ struct HistoryView: View {
             HStack {
                 Image(systemName: "magnifyingglass")
                     .foregroundColor(.gray)
-                TextField("Rechercher...", text: $searchText)
+                TextField("Rechercher...", text: $viewModel.searchText)
                     .foregroundColor(.white)
             }
             .padding()
@@ -42,8 +32,8 @@ struct HistoryView: View {
             // History list
             ScrollView {
                 LazyVStack(spacing: 15) {
-                    ForEach(filteredItems) { item in
-                        HistoryRow(item: item)
+                    ForEach(viewModel.filteredConversation) { conversation in
+                        ConversationRowView(conversation: conversation)
                     }
                 }
                 .padding()
@@ -54,6 +44,11 @@ struct HistoryView: View {
                 .edgesIgnoringSafeArea(.all)
         )
         .navigationBarHidden(true)
+        .onAppear {
+            Task {
+                await viewModel.fetchData()
+            }
+        }
     }
 }
 
