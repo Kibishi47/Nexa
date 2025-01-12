@@ -15,8 +15,10 @@ struct LoginView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            
-            BackButton()
+            HStack {
+                BackButton()
+                Spacer()
+            }
             
             Spacer()
             

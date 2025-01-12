@@ -112,4 +112,13 @@ enum AIFeature: String, Identifiable, CaseIterable {
             return MessageConversationStrategy(self)
         }
     }
+    
+    var canChangeLanguage: Bool {
+        switch self {
+        case .translation:
+            return true
+        default:
+            return false
+        }
+    }
 }

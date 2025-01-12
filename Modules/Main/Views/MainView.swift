@@ -11,6 +11,7 @@ struct MainView: View {
     @EnvironmentObject private var navigationManager: NavigationManager
     @State private var isMenuShowing = false
     @State private var currentSubscription: SubscriptionPlan = SubscriptionRepository().getCurrentPlan()
+    @StateObject private var viewModel = MainViewModel()
     
     let features: [AIFeature] = FeatureRepository().getHistoryItems()
     let recentHistory: [HistoryItem] = Array(HistoryRepository().getHistoryItems().prefix(3))
@@ -96,8 +97,20 @@ struct MainView: View {
                                 .foregroundColor(.blue)
                             }
                             
-                            ForEach(recentHistory) { item in
-                                HistoryRow(item: item)
+                            if (viewModel.isLoading) {
+                                Spacer()
+                                ProgressView()
+                                    .scaleEffect(1.5)
+                                    .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                                Spacer()
+                            } else {
+                                ForEach(viewModel.conversations) { conversation in
+                                    Button(action: {
+                                        navigationManager.navigateToConversation(conversation: conversation, feature: conversation.feature)
+                                    }, label: {
+                                        ConversationRowView(conversation: conversation)
+                                    })
+                                }
                             }
                         }
                         .padding()
@@ -113,6 +126,11 @@ struct MainView: View {
             // Sidebar
             SideMenu(isShowing: $isMenuShowing)
                 .environmentObject(navigationManager)
+        }
+        .onAppear {
+            Task {
+                await viewModel.fetchData()
+            }
         }
     }
 }

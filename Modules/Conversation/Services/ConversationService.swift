@@ -19,15 +19,19 @@ class ConversationService {
         return instance!
     }
     
-    func fetchConversations(userId: UUID) async -> [Conversation] {
+    func fetchConversations(userId: UUID, limit: Int? = nil) async -> [Conversation] {
         do {
-            let conversations: [Conversation] = try await supabaseClient
+            var query = supabaseClient
                 .from("conversations_with_last_message")
                 .select("*, messages(*)")
                 .eq("user_id", value: userId)
                 .order("last_message_date", ascending: false)
-                .execute()
-                .value
+            
+            if let limit = limit {
+                query = query.limit(limit)
+            }
+            
+            let conversations: [Conversation] = try await query.execute().value
             return conversations
         } catch {
             print("error fetching conversations: \(error.localizedDescription)")

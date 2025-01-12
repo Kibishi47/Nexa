@@ -16,7 +16,10 @@ struct SignUpView: View {
     var body: some View {
         VStack(spacing: 25) {
             
-            BackButton()
+            HStack {
+                BackButton()
+                Spacer()
+            }
             
             Spacer()
             

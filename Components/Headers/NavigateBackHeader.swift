@@ -8,24 +8,35 @@
 import SwiftUI
 
 struct NavigateBackHeader<RightElement: View>: View {
-    let title: String
     let rightElement: RightElement
+    var title: Text
     
     init(title: String, rightElement: RightElement = EmptyView()) {
-        self.title = title
+        self.title = Text(title)
+            .font(.title2)
+            .fontWeight(.bold)
+            .foregroundColor(.white)
         self.rightElement = rightElement
     }
     
     var body: some View {
-        ZStack {
-            BackButton()
-            
+        if rightElement is EmptyView {
+            ZStack {
+                HStack {
+                    BackButton()
+                    Spacer()
+                }
+                HStack {
+                    Spacer()
+                    title
+                    Spacer()
+                }
+            }
+        } else {
             HStack {
+                BackButton()
                 Spacer()
-                Text(title)
-                    .font(.title2)
-                    .fontWeight(.bold)
-                    .foregroundColor(.white)
+                title
                 Spacer()
                 rightElement
             }
@@ -37,7 +48,15 @@ struct NavigateBackHeader<RightElement: View>: View {
     ZStack {
         Color.black.edgesIgnoringSafeArea(.all)
         VStack {
-            NavigateBackHeader(title: "Title")
+            NavigateBackHeader(
+                title: "Title",
+                rightElement: Button(action: {}, label: {
+                    Image(systemName: "person")
+                })
+            )
+            NavigateBackHeader(
+                title: "Title"
+            )
             Spacer()
         }
     }

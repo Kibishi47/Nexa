@@ -17,7 +17,16 @@ protocol ConversationStrategy {
 
 extension ConversationStrategy {
     func getGPTMessage(_ GPTResponse: [String: Any]) -> String {
-        let response = GPTResponse["response"]! as! [String: Any]
-        return response["message"]! as! String
+        if let response = GPTResponse["response"] as? [String: Any],
+           let message = response["message"] as? String {
+            return message
+        } else {
+            if let error = GPTResponse["error"] as? String {
+                print("error from gpt api: \(error)")
+            } else {
+                print("Error: Invalid structure or missing keys in GPTResponse")
+            }
+            return "An error occurred"
+        }
     }
 }

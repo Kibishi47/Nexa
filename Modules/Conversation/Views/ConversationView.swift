@@ -10,6 +10,7 @@ import SwiftUI
 struct ConversationView: View {
     @EnvironmentObject private var navigationManager: NavigationManager
     @StateObject private var viewModel: ConversationViewModel
+    @StateObject private var languageManager = LanguageManager.getInstance()
     private let feature: AIFeature
     
     init(conversation: Conversation?, feature: AIFeature) {
@@ -17,11 +18,27 @@ struct ConversationView: View {
         _viewModel = StateObject(wrappedValue: ConversationViewModel(conversation: conversation, feature: feature))
     }
     
+    var languageDropdown: AnyView {
+        if feature.canChangeLanguage {
+            AnyView(
+                LanguageDropdown(
+                    size: .small,
+                    languages: languageManager.availableLanguages,
+                    selectedLanguage: $languageManager.selectedLanguage,
+                    isLoading: $languageManager.isLoading
+                )
+            )
+        } else {
+            AnyView(EmptyView())
+        }
+    }
+    
     var body: some View {
         VStack(spacing: 0) {
             // Header
             NavigateBackHeader(
-                title: "Chat avec Nexa"
+                title: "Chat avec Nexa",
+                rightElement: languageDropdown
             )
             .padding()
             .background(Color.black.opacity(0.5))

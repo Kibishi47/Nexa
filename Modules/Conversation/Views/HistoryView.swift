@@ -33,7 +33,11 @@ struct HistoryView: View {
             ScrollView {
                 LazyVStack(spacing: 15) {
                     ForEach(viewModel.filteredConversation) { conversation in
-                        ConversationRowView(conversation: conversation)
+                        Button(action: {
+                            navigationManager.navigateToConversation(conversation: conversation, feature: conversation.feature)
+                        }, label: {
+                            ConversationRowView(conversation: conversation)
+                        })
                     }
                 }
                 .padding()

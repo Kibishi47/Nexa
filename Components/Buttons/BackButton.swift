@@ -17,7 +17,6 @@ struct BackButton: View {
                     .font(.system(size: 20, weight: .semibold))
                     .foregroundColor(.white)
             }
-            Spacer()
         }
         .padding(.horizontal)
         .padding(.top, 5)

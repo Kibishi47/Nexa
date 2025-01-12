@@ -54,6 +54,6 @@ class MainViewState: ViewState {
     }
     
     func navigateToConversation(conversation: Conversation?, feature: AIFeature) {
-        return
+        navigationManager.updateView(ConversationViewState(navigationManager, conversation: conversation, feature: feature))
     }
 }
